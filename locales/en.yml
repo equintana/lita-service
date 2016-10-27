@@ -2,3 +2,7 @@ en:
   lita:
     handlers:
       service:
+        created: "Yay! %{service_name} service was created."  
+        name_duplicated: "A service called %{service_name} exist already"
+        inscribe_tip: "Add customers with:\nlita service %{service_name} inscribe to < USER > < *VALUE >"
+
