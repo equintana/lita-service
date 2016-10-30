@@ -18,4 +18,12 @@ TODO: Describe any configuration attributes the plugin exposes.
 
 ## Usage
 
-TODO: Describe the plugin's features and how to use them.
+First create a service with the command `create`, it accepts two parameters,
+name and value*. The parameter value is optional, it will be set to 0 if nothing was passed.
+
+```
+ lita-service create < NAME > < *VALUE >
+
+ lita-service create awesome-service
+ lita-service create awesome-service 200
+```
