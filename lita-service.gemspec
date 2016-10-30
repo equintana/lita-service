@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Gem::Specification.new do |spec|
   spec.name          = 'lita-service'
   spec.version       = '0.1.0'

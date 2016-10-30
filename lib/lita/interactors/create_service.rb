@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Lita
   module Interactors
     # Create a new service with the given data,
