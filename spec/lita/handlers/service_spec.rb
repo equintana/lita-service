@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Lita::Handlers::Service, lita_handler: true do
-
   describe 'routes' do
     it { is_expected.to route('ping').to(:pong) }
     it { is_expected.to route('create awesome-service').to(:create) }
