@@ -2,7 +2,11 @@ en:
   lita:
     handlers:
       service:
-        created: "Yay! %{service_name} service was created."  
-        name_duplicated: "A service called %{service_name} exist already"
+        create:
+          success: "Yay! %{service_name} service was created."  
+          error: "A service called %{service_name} exist already"
+        delete: 
+          success: "Service %{service_name} was deleted."
+          error: "There isn't a service called %{service_name} or it was deleted."
         inscribe_tip: "Add customers with:\nlita service %{service_name} inscribe to < USER > < *VALUE >"
 

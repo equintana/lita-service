@@ -6,17 +6,18 @@ describe Lita::Handlers::Service, lita_handler: true do
     it { is_expected.to route('ping').to(:pong) }
     it { is_expected.to route('create awesome-service').to(:create) }
     it { is_expected.to route('create awesome-service 2000').to(:create) }
+    it { is_expected.to route('delete awesome-service').to(:delete) }
   end
 
   describe 'callbacks' do
-    describe 'ping' do
+    describe '#ping' do
       it 'replies pong' do
         send_message('ping')
         expect(replies.last).to eq 'pong!'
       end
     end
 
-    describe 'create' do
+    describe '#create' do
       describe 'name not taken' do
         let(:success_message) do
           "Yay! awesome-service service was created.\n" \
@@ -43,6 +44,32 @@ describe Lita::Handlers::Service, lita_handler: true do
         it 'replys with an error' do
           send_message('create awesome-service')
           send_message('create awesome-service')
+          expect(replies.last).to eq(error_message)
+        end
+      end
+    end
+
+    describe '#delete' do
+      describe 'when the service exists' do
+        let(:success_message) { 'Service awesome-service was deleted.' }
+        before do
+          send_message('create awesome-service')
+        end
+
+        it 'deletes the service' do
+          send_message('delete awesome-service')
+          expect(replies.last).to eq(success_message)
+        end
+      end
+
+      describe 'when service dont exist' do
+        let(:error_message) do
+          "ERROR: There isn't a service called awesome-service " \
+            'or it was deleted.'
+        end
+
+        it 'replys with an error' do
+          send_message('delete awesome-service')
           expect(replies.last).to eq(error_message)
         end
       end

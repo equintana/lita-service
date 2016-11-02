@@ -8,6 +8,7 @@ module Lita
       # Routes
       route(/ping/, :pong)
       route(/create ([\w-]+)( [0-9]*)?/, :create)
+      route(/delete ([\w-]+)/, :delete)
 
       # Callbacks
       def pong(response)
@@ -21,6 +22,16 @@ module Lita
 
         template = :service_created
         message = { service: interactor.message }
+        reply(template, message, response, interactor)
+      end
+
+      def delete(response)
+        interactor = Interactors::DeleteService
+                     .new(self, response.match_data)
+                     .perform
+
+        template = :service_deleted
+        message = { message: interactor.message }
         reply(template, message, response, interactor)
       end
 

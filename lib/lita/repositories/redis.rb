@@ -16,6 +16,10 @@ module Lita
       def add(resource)
         redis.set(resource[:name], MultiJson.dump(resource))
       end
+
+      def delete(key)
+        redis.del(key)
+      end
     end
   end
 end
