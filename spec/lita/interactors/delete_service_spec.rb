@@ -1,17 +1,11 @@
 # frozen_string_literal: false
 require 'spec_helper'
 
-describe Lita::Interactors::CreateService do
+describe Lita::Interactors::DeleteService do
   let(:interactor) { described_class.new(handler, data) }
   let(:handler) { double('handler') }
-  let(:data) { ['create new-service', name, 2000] }
-  let(:name) { 'new-service' }
-  let(:service) do
-    { name: name,
-      value: 2000.0,
-      state: 'active',
-      customers: [] }
-  end
+  let(:data) { ['delete awesome-service', name] }
+  let(:name) { 'awesome-service' }
   let(:fake_repository) { double('redis-repository') }
 
   before do
@@ -20,31 +14,35 @@ describe Lita::Interactors::CreateService do
 
   describe '#perform' do
     describe 'when the service does not exist' do
-      before do
-        allow(fake_repository).to receive(:exists?).with(name).and_return(false)
-        allow(fake_repository).to receive(:add).with(service)
+      let(:error_message) do
+        I18n.t('lita.handlers.service.delete.error', service_name: name)
       end
 
-      it 'creates the service' do
+      before do
+        allow(fake_repository).to receive(:exists?).with(name).and_return(false)
+      end
+
+      it 'shows error message' do
         interactor.perform
-        expect(interactor.success?).to eq true
-        expect(interactor.message).to eq service
+        expect(interactor.success?).to eq false
+        expect(interactor.error).to eq error_message
       end
     end
 
     describe 'when service exists' do
-      let(:error_message) do
-        I18n.t('lita.handlers.service.create.error', service_name: name)
+      let(:success_message) do
+        I18n.t('lita.handlers.service.delete.success', service_name: name)
       end
 
       before do
         allow(fake_repository).to receive(:exists?).with(name).and_return(true)
+        allow(fake_repository).to receive(:delete).with(name).and_return(true)
       end
 
-      it 'does not create the service' do
+      it 'deletes the service' do
         interactor.perform
-        expect(interactor.success?).to eq false
-        expect(interactor.error).to eq error_message
+        expect(interactor.success?).to eq true
+        expect(interactor.message).to eq success_message
       end
     end
   end

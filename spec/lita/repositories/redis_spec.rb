@@ -24,5 +24,14 @@ describe Lita::Repositories::Redis do
       end
       it { expect(repository.add(resource)).to eq 'OK' }
     end
+
+    describe 'delete' do
+      before do
+        allow(redis).to receive(:del)
+          .with('key')
+          .and_return('OK')
+      end
+      it { expect(repository.delete('key')).to eq 'OK' }
+    end
   end
 end

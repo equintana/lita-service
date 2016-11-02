@@ -13,7 +13,7 @@ module Lita
 
       def perform
         if service_exists?
-          @error = I18n.t('lita.handlers.service.name_duplicated',
+          @error = I18n.t('lita.handlers.service.create.error',
                           service_name: name)
         else
           @message = create_service
