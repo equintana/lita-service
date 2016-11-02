@@ -1,6 +1,7 @@
 # lita-service
 
 [![Build Status](https://travis-ci.org/equintana/lita-service.png?branch=master)](https://travis-ci.org/equintana/lita-service)
+[![Coverage Status](https://coveralls.io/builds/8637437/badge)](https://coveralls.io/builds/8637437)
 
 TODO: Add a description of the plugin.
 
