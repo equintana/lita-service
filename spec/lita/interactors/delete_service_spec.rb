@@ -15,7 +15,7 @@ describe Lita::Interactors::DeleteService do
   describe '#perform' do
     describe 'when the service does not exist' do
       let(:error_message) do
-        I18n.t('lita.handlers.service.delete.error', service_name: name)
+        I18n.t('lita.handlers.service.errors.not_found', service_name: name)
       end
 
       before do

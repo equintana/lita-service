@@ -1,0 +1,29 @@
+
+<%= @service[:name] %>
+<% if @service[:customers].empty? %>
+
+  <%= I18n.t("lita.handlers.service.empty") %>
+
+  <%= I18n.t("lita.handlers.service.inscribe.tip", service_name: @service[:name]) %>
+<% else %>
+<%  total = 0
+    total_quantity = 0
+%>
+-------------------------------------------------------------
+  #  | Name                 | Quantity | Value    | Total    
+-----+----------------------+----------+----------+----------
+<% @service[:customers].each_with_index do |(name, customer), i| %>
+<%
+  number         = i + 1
+  quantity       = customer[:quantity]
+  value          = customer[:value]
+  subtotal       = quantity * value
+  total          = total + subtotal
+  total_quantity = total_quantity + quantity
+%><%= " %3s | %-20s | %-8i | %-8i | %-8i " % [number, name.to_sym, quantity, value, subtotal] %>
+<% end %>
+-----+----------------------+----------+----------+----------
+<%=   " %3s | %-20s | %-8i | %-8s | %-8i " % ['', 'Total', total_quantity, '***', total] %>
+
+-------------------------------------------------------------
+<% end %>
