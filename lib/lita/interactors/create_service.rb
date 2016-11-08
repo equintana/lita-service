@@ -1,9 +1,13 @@
 # frozen_string_literal: true
+require 'lita/helpers/messages_helper'
+
 module Lita
   module Interactors
     # Create a new service with the given data,
     # validating does not exist any service with the same name
     class CreateService < BaseInteractor
+      include Lita::Helpers::MessagesHelper
+
       attr_reader :data
 
       def initialize(handler, data)
@@ -13,8 +17,7 @@ module Lita
 
       def perform
         if service_exists?
-          @error = I18n.t('lita.handlers.service.create.error',
-                          service_name: name)
+          @error = msg_duplicated(service_name: name)
         else
           @message = create_service
         end
@@ -46,7 +49,7 @@ module Lita
           name: name,
           value: value,
           state: 'active',
-          customers: []
+          customers: {}
         }
       end
     end

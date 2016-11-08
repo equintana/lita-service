@@ -1,2 +1,5 @@
 Style/FileName:
    Exclude: [ 'lib/lita-service.rb' ]
+   
+Metrics/LineLength:
+   Max: 90

@@ -3,8 +3,8 @@ require 'lita/helpers/messages_helper'
 
 module Lita
   module Interactors
-    # Deletes an existing service that matches with the given name
-    class DeleteService < BaseInteractor
+    # Show service
+    class ShowService < BaseInteractor
       include Lita::Helpers::MessagesHelper
 
       attr_reader :data
@@ -16,9 +16,7 @@ module Lita
 
       def perform
         if service_exists?
-          delete_service
-          @message = I18n.t('lita.handlers.service.delete.success',
-                            service_name: name)
+          @message = service
         else
           @error = msg_not_found(service_name: name)
         end
@@ -31,12 +29,12 @@ module Lita
         @name ||= data[1]
       end
 
-      def service_exists?
-        repository.exists?(name)
+      def service
+        @service ||= repository.find(name)
       end
 
-      def delete_service
-        repository.delete(name)
+      def service_exists?
+        repository.exists?(name)
       end
     end
   end

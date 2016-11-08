@@ -25,6 +25,18 @@ describe Lita::Repositories::Redis do
       it { expect(repository.add(resource)).to eq 'OK' }
     end
 
+    describe 'update' do
+      let(:resource) do
+        { name: 'key', attr: '1' }
+      end
+      before do
+        allow(redis).to receive(:set)
+          .with('key', MultiJson.dump(resource))
+          .and_return('OK')
+      end
+      it { expect(repository.update(resource)).to eq 'OK' }
+    end
+
     describe 'delete' do
       before do
         allow(redis).to receive(:del)
@@ -32,6 +44,18 @@ describe Lita::Repositories::Redis do
           .and_return('OK')
       end
       it { expect(repository.delete('key')).to eq 'OK' }
+    end
+
+    describe 'find' do
+      let(:resource) do
+        { name: 'key', attr: '1' }
+      end
+      before do
+        allow(redis).to receive(:get)
+          .with('key')
+          .and_return(MultiJson.dump(resource))
+      end
+      it { expect(repository.find('key')).to eq resource }
     end
   end
 end

@@ -13,8 +13,17 @@ module Lita
         redis.exists(key)
       end
 
+      def find(key)
+        resource = redis.get(key)
+        MultiJson.load(resource, symbolize_keys: true)
+      end
+
       def add(resource)
         redis.set(resource[:name], MultiJson.dump(resource))
+      end
+
+      def update(resource)
+        add(resource)
       end
 
       def delete(key)
