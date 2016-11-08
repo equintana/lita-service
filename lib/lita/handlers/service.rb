@@ -11,6 +11,7 @@ module Lita
       route(/show ([\w-]+)/, :show)
       route(/delete ([\w-]+)/, :delete)
       route(/([\w-]+) inscribe ([\@\w-]+)( [0-9]*)?/, :inscribe)
+      route(/([\w-]+) add ([\@\w-]+)( [0-9-]*)?/, :add)
 
       # Callbacks
       def pong(response)
@@ -49,6 +50,16 @@ module Lita
 
       def inscribe(response)
         interactor = Interactors::InscribeCustomer
+                     .new(self, response.match_data)
+                     .perform
+
+        template = :message
+        message = { message: interactor.message }
+        reply(template, message, response, interactor)
+      end
+
+      def add(response)
+        interactor = Interactors::AddQuantity
                      .new(self, response.match_data)
                      .perform
 

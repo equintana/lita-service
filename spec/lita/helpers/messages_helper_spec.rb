@@ -19,10 +19,16 @@ describe Lita::Helpers::MessagesHelper do
     expect(subject.msg_not_found(service_name: service)).to eq msg
   end
 
+  it '#customer_not_found' do
+    msg = I18n.t('lita.handlers.service.customer.not_found', service_name: service,
+                                                             customer_name: 'erlinis')
+    expect(subject.msg_customer_not_found(service_name: service,
+                                          customer: 'erlinis')).to eq msg
+  end
   it '#customer_duplicated' do
     msg = I18n.t('lita.handlers.service.customer.duplicated', service_name: service,
                                                               customer_name: 'erlinis')
     expect(subject.msg_customer_duplicated(service_name: service,
-                                           customer: 'erlinis')).to eq msg
+                                           customer_name: 'erlinis')).to eq msg
   end
 end

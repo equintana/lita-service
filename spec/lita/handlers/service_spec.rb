@@ -11,6 +11,9 @@ describe Lita::Handlers::Service, lita_handler: true do
     it { is_expected.to route('TheService inscribe erlinis').to(:inscribe) }
     it { is_expected.to route('TheService inscribe @erlinis').to(:inscribe) }
     it { is_expected.to route('TheService inscribe @erlinis 20').to(:inscribe) }
+    it { is_expected.to route('TheService add @erlinis 2').to(:add) }
+    it { is_expected.to route('TheService add @erlinis -2').to(:add) }
+    it { is_expected.to route('TheService add @erlinis').to(:add) }
   end
 
   describe 'callbacks' do
@@ -79,10 +82,10 @@ describe Lita::Handlers::Service, lita_handler: true do
              "-------------------------------------------------------------\n" \
              "  #  | Name                 | Quantity | Value    | Total    \n" \
              "-----+----------------------+----------+----------+----------\n" \
-             "   1 | erlinis              | 0        | 2000     | 0        \n" \
-             "   2 | khal                 | 0        | 2000     | 0        \n" \
+             "   1 | erlinis              | 1        | 2000     | 2000     \n" \
+             "   2 | khal                 | 2        | 2000     | 4000     \n" \
              "-----+----------------------+----------+----------+----------\n" \
-             "     | Total                | 0        | ***      | 0        \n" \
+             "     | Total                | 3        | ***      | 6000     \n" \
              "-------------------------------------------------------------\n"
           end
 
@@ -90,6 +93,8 @@ describe Lita::Handlers::Service, lita_handler: true do
             send_message('create TheService 2000')
             send_message('TheService inscribe erlinis 2000')
             send_message('TheService inscribe khal 2000')
+            send_message('TheService add erlinis 1')
+            send_message('TheService add khal 2')
           end
 
           it 'shows the service' do
@@ -139,6 +144,65 @@ describe Lita::Handlers::Service, lita_handler: true do
 
     describe '#inscribe' do
       describe 'when service exists' do
+        before do
+          send_message('create TheService')
+          send_message('TheService inscribe @erlinis 2000')
+        end
+
+        describe 'customer not inscribed' do
+          let(:success_message) { 'erlinis was inscribed to TheService.' }
+
+          it 'inscribes the customer' do
+            expect(replies.last).to eq(success_message)
+          end
+        end
+
+        describe 'customer inscribed already' do
+          let(:error_message) { 'ERROR: erlinis is already in TheService.' }
+
+          it 'returns an error' do
+            send_message('TheService inscribe @erlinis 2000')
+            expect(replies.last).to eq(error_message)
+          end
+        end
+      end
+
+      describe 'when service does not exit' do
+        let(:error_message) do
+          "ERROR: There isn't a service called TheService " \
+            'or it was deleted.'
+        end
+
+        it 'replys with an error' do
+          send_message('TheService inscribe @erlinis')
+          expect(replies.last).to eq(error_message)
+        end
+      end
+    end
+
+    describe '#add' do
+      describe 'when service exists' do
+        before do
+          send_message('create TheService')
+          send_message('TheService inscribe @erlinis 2000')
+        end
+
+        describe 'with positive quantity' do
+          let(:success_message) { '2 was added to erlinis, new quantity: 2' }
+          it 'inscrease the customer quantity' do
+            send_message('TheService add @erlinis 2')
+            expect(replies.last).to eq(success_message)
+          end
+        end
+
+        describe 'with negative quantity' do
+          let(:success_message) { '-1 was added to erlinis, new quantity: 4' }
+          it 'decrease the customer quantity' do
+            send_message('TheService add @erlinis 5')
+            send_message('TheService add @erlinis -1')
+            expect(replies.last).to eq(success_message)
+          end
+        end
       end
 
       describe ' when service does not exit' do
