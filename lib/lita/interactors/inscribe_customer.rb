@@ -16,11 +16,7 @@ module Lita
 
       def perform
         if service_exists?
-          if new_customer?
-            add_customer
-          else
-            @error = msg_customer_duplicated(service_name: name, customer: customer_name)
-          end
+          inscribe_customer_if_new
         else
           @error = msg_not_found(service_name: name)
         end
@@ -51,6 +47,15 @@ module Lita
 
       def new_customer?
         !service[:customers].keys.include?(customer_name.to_sym)
+      end
+
+      def inscribe_customer_if_new
+        if new_customer?
+          add_customer
+        else
+          @error = msg_customer_duplicated(service_name: name,
+                                           customer_name: customer_name)
+        end
       end
 
       def add_customer
