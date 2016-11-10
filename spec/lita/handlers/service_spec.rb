@@ -14,6 +14,8 @@ describe Lita::Handlers::Service, lita_handler: true do
     it { is_expected.to route('TheService add @erlinis 2').to(:add) }
     it { is_expected.to route('TheService add @erlinis -2').to(:add) }
     it { is_expected.to route('TheService add @erlinis').to(:add) }
+    it { is_expected.to route('TheService delete @erlinis').to(:delete_customer) }
+    it { is_expected.to route('TheService remove erlinis').to(:delete_customer) }
   end
 
   describe 'callbacks' do
@@ -45,7 +47,7 @@ describe Lita::Handlers::Service, lita_handler: true do
 
       describe 'name taken' do
         let(:error_message) do
-          'ERROR: A service called TheService exist already'
+          'ERROR: A service called TheService exist already.'
         end
 
         it 'replys with an error' do
@@ -175,6 +177,47 @@ describe Lita::Handlers::Service, lita_handler: true do
 
         it 'replys with an error' do
           send_message('TheService inscribe @erlinis')
+          expect(replies.last).to eq(error_message)
+        end
+      end
+    end
+
+    describe '#delete_customer' do
+      describe 'when service exists' do
+        before do
+          send_message('create TheService')
+        end
+
+        describe 'customer in service' do
+          let(:success_message) { 'erlinis was deleted from TheService.' }
+          before do
+            send_message('TheService inscribe @erlinis 2000')
+          end
+
+          it 'removes the customer' do
+            send_message('TheService delete @erlinis')
+            expect(replies.last).to eq(success_message)
+          end
+        end
+
+        describe 'customer not in service' do
+          let(:error_message) { 'ERROR: There is no erlinis in TheService.' }
+
+          it 'returns an error' do
+            send_message('TheService delete @erlinis')
+            expect(replies.last).to eq(error_message)
+          end
+        end
+      end
+
+      describe 'when service does not exit' do
+        let(:error_message) do
+          "ERROR: There isn't a service called TheService " \
+            'or it was deleted.'
+        end
+
+        it 'replys with an error' do
+          send_message('TheService delete @erlinis')
           expect(replies.last).to eq(error_message)
         end
       end

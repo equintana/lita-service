@@ -4,11 +4,10 @@ require 'lita/helpers/messages_helper'
 module Lita
   module Interactors
     # Inscribes a customer in a service
-    class AddQuantity < BaseInteractor
+    class DeleteCustomer < BaseInteractor
       include Lita::Helpers::MessagesHelper
 
       attr_reader :data
-      DEFAULT_QUANTITY = 1
 
       def initialize(handler, data)
         @handler = handler
@@ -17,7 +16,7 @@ module Lita
 
       def perform
         if service_exists?
-          update_costumer_if_exist
+          delete_customer_if_in_service
         else
           @error = msg_not_found(service_name: name)
         end
@@ -34,10 +33,6 @@ module Lita
         @customer_name ||= data[2].delete('@')
       end
 
-      def customer_quantity
-        @customer_quantity ||= data[3].to_s
-      end
-
       def service
         @service ||= repository.find(name)
       end
@@ -46,35 +41,24 @@ module Lita
         repository.exists?(name)
       end
 
-      def customer_exists?
+      def customer_in_service?
         service[:customers].keys.include?(customer_name.to_sym)
       end
 
-      def update_costumer_if_exist
-        if customer_exists?
-          update_customer_quantity
+      def delete_customer_if_in_service
+        if customer_in_service?
+          delete_customer_from_service
         else
           @error = msg_customer_not_found(service_name: name,
                                           customer_name: customer_name)
         end
       end
 
-      def update_customer_quantity
-        new_quantity = increment_quantity
+      def delete_customer_from_service
+        service[:customers].delete(customer_name.to_sym)
         repository.update(service)
-        @message = I18n.t('lita.handlers.service.add.success',
-                          quantity: quantity_calculated,
-                          customer_name: customer_name,
-                          customer_quantity: new_quantity)
-      end
-
-      def increment_quantity
-        service[:customers][customer_name.to_sym][:quantity] += quantity_calculated
-      end
-
-      def quantity_calculated
-        return customer_quantity.to_i unless customer_quantity.empty?
-        DEFAULT_QUANTITY
+        @message = I18n.t('lita.handlers.service.delete_customer.success',
+                          service_name: name, customer_name: customer_name)
       end
     end
   end

@@ -21,7 +21,8 @@ gem "lita-service"
  lita service delete <NAME>
 
  lita service <NAME> inscribe <CUSTOMER> <*VALUE>      # Value will be set to service's value if empty.
- lita service <NAME> add      <CUSTOMER> <*QUANTITY>   # Quantity will be set to 1 if empty.
+ lita service <NAME> add|sum  <CUSTOMER> <*QUANTITY>   # Quantity will be set to 1 if empty.
+ lita service <NAME> delete|remove <CUSTOMER>
 ```
 
 ## Example
@@ -33,4 +34,7 @@ gem "lita-service"
 
  lita service awesome-service inscribe erlinis
  lita service awesome-service add erlinis 2
+ lita service awesome-service sum erlinis 2
+ lita service awesome-service delete erlinis
+ lita service awesome-service remove erlinis
 ```

@@ -72,7 +72,6 @@ describe Lita::Interactors::InscribeCustomer do
         before do
           allow(fake_repository).to receive(:exists?).with(name).and_return(true)
           allow(fake_repository).to receive(:find).with(name).and_return(service)
-          allow(fake_repository).to receive(:update).with(service_with_customer)
         end
 
         describe 'with custom service value' do
@@ -90,6 +89,7 @@ describe Lita::Interactors::InscribeCustomer do
           end
 
           it 'adds the customer setting the custom value' do
+            expect(fake_repository).to receive(:update).with(service_with_customer)
             interactor.perform
             expect(interactor.success?).to eq true
             expect(interactor.message).to eq success_message
@@ -107,6 +107,7 @@ describe Lita::Interactors::InscribeCustomer do
           end
 
           it 'adds the customer setting the custom value' do
+            expect(fake_repository).to receive(:update).with(service_with_customer)
             interactor.perform
             expect(interactor.success?).to eq true
             expect(interactor.message).to eq success_message

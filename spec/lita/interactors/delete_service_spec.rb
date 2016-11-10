@@ -36,10 +36,10 @@ describe Lita::Interactors::DeleteService do
 
       before do
         allow(fake_repository).to receive(:exists?).with(name).and_return(true)
-        allow(fake_repository).to receive(:delete).with(name).and_return(true)
       end
 
       it 'deletes the service' do
+        expect(fake_repository).to receive(:delete).with(name).and_return(true)
         interactor.perform
         expect(interactor.success?).to eq true
         expect(interactor.message).to eq success_message

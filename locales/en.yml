@@ -12,11 +12,13 @@ en:
           tip: "Add customers with:\nlita service %{service_name} inscribe < CUSTOMER > < *VALUE >"
         add:
           success: "%{quantity} was added to %{customer_name}, new quantity: %{customer_quantity}"
+        delete_customer: 
+          success: "%{customer_name} was deleted from %{service_name}."
         errors:
-          duplicated: "A service called %{service_name} exist already"
+          duplicated: "A service called %{service_name} exist already."
           not_found: "There isn't a service called %{service_name} or it was deleted."
         customer:
           duplicated: "%{customer_name} is already in %{service_name}."
-          not_found: "There is not %{customer_name} in %{service_name}"
+          not_found: "There is no %{customer_name} in %{service_name}."
 
 

@@ -23,10 +23,10 @@ describe Lita::Interactors::CreateService do
 
       before do
         allow(fake_repository).to receive(:exists?).with(name).and_return(false)
-        allow(fake_repository).to receive(:add).with(service)
       end
 
       it 'creates the service' do
+        expect(fake_repository).to receive(:add).with(service)
         interactor.perform
         expect(interactor.success?).to eq true
         expect(interactor.message).to eq service
