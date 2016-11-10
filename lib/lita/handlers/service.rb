@@ -9,9 +9,12 @@ module Lita
       route(/ping/, :pong)
       route(/create ([\w-]+)( [0-9]*)?/, :create)
       route(/show ([\w-]+)/, :show)
-      route(/delete ([\w-]+)/, :delete)
+      route(/delete ([\w-]+)/i, :delete)
       route(/([\w-]+) inscribe ([\@\w-]+)( [0-9]*)?/, :inscribe)
       route(/([\w-]+) add ([\@\w-]+)( [0-9-]*)?/, :add)
+      route(/([\w-]+) sum ([\@\w-]+)( [0-9-]*)?/, :add)
+      route(/([\w-]+) remove ([\@\w-]+)/, :delete_customer)
+      route(/([\w-]+) delete ([\@\w-]+)/, :delete_customer)
 
       # Callbacks
       def pong(response)
@@ -60,6 +63,16 @@ module Lita
 
       def add(response)
         interactor = Interactors::AddQuantity
+                     .new(self, response.match_data)
+                     .perform
+
+        template = :message
+        message = { message: interactor.message }
+        reply(template, message, response, interactor)
+      end
+
+      def delete_customer(response)
+        interactor = Interactors::DeleteCustomer
                      .new(self, response.match_data)
                      .perform
 

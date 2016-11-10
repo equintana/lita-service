@@ -12,6 +12,7 @@ require 'lita/interactors/add_quantity'
 require 'lita/interactors/show_service'
 require 'lita/interactors/delete_service'
 require 'lita/interactors/inscribe_customer'
+require 'lita/interactors/delete_customer'
 require 'lita/helpers/messages_helper'
 
 Lita::Handlers::Service.template_root File.expand_path(
