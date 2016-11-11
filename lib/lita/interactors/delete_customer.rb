@@ -30,7 +30,7 @@ module Lita
       end
 
       def customer_name
-        @customer_name ||= data[2].delete('@')
+        @customer_name ||= data[3].delete('@')
       end
 
       def service

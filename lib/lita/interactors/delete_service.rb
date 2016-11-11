@@ -28,7 +28,7 @@ module Lita
       private
 
       def name
-        @name ||= data[1]
+        @name ||= data[2]
       end
 
       def service_exists?

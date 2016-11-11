@@ -12,6 +12,8 @@ en:
           tip: "Add customers with:\nlita service %{service_name} inscribe < CUSTOMER > < *VALUE >"
         add:
           success: "%{quantity} was added to %{customer_name}, new quantity: %{customer_quantity}"
+        add_all:
+          success: "%{quantity} was added to all."
         delete_customer: 
           success: "%{customer_name} was deleted from %{service_name}."
         errors:

@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Lita::Interactors::DeleteService do
   let(:interactor) { described_class.new(handler, data) }
   let(:handler) { double('handler') }
-  let(:data) { ['delete awesome-service', name] }
+  let(:data) { ['delete awesome-service', 'delete', name] }
   let(:name) { 'awesome-service' }
   let(:fake_repository) { double('redis-repository') }
 

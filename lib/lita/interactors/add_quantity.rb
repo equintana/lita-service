@@ -31,11 +31,11 @@ module Lita
       end
 
       def customer_name
-        @customer_name ||= data[2].delete('@')
+        @customer_name ||= data[3].delete('@')
       end
 
       def customer_quantity
-        @customer_quantity ||= data[3].to_s
+        @customer_quantity ||= data[4].to_s
       end
 
       def service
