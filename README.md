@@ -16,13 +16,14 @@ gem "lita-service"
 ## Usage
 
 ``` sh
- lita service create <NAME> <*VALUE>                   # Value will be set to 0 if empty.
- lita service show   <NAME>
- lita service delete <NAME>
+ lita service create        <NAME> <*VALUE>                 # Value will be set to 0 if empty.
+ lita service show          <NAME>
+ lita service delete|remove <NAME>
 
- lita service <NAME> inscribe <CUSTOMER> <*VALUE>      # Value will be set to service's value if empty.
- lita service <NAME> add|sum  <CUSTOMER> <*QUANTITY>   # Quantity will be set to 1 if empty.
+ lita service <NAME> inscribe      <CUSTOMER> <*VALUE>      # Value will be set to service's value if empty.
  lita service <NAME> delete|remove <CUSTOMER>
+ lita service <NAME> add|sum       <CUSTOMER> <*QUANTITY>   # Quantity will be set to 1 if empty.
+ lita service <NAME> add|sum all   <*QUANTITY>              # Quantity will be set to 1 if empty.
 ```
 
 ## Example
@@ -31,10 +32,13 @@ gem "lita-service"
  lita service create awesome-service 200
  lita service show awesome-service
  lita service delete awesome-service
+ lita service remove awesome-service
 
  lita service awesome-service inscribe erlinis
  lita service awesome-service add erlinis 2
  lita service awesome-service sum erlinis 2
+ lita service awesome-service add all 3
+ lita service awesome-service sum all 3
  lita service awesome-service delete erlinis
  lita service awesome-service remove erlinis
 ```

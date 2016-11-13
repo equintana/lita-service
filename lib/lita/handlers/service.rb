@@ -6,15 +6,15 @@ module Lita
       namespace :service
 
       # Routes
-      route(/ping/, :pong)
-      route(/create ([\w-]+)( [0-9]*)?/, :create)
-      route(/show ([\w-]+)/, :show)
-      route(/delete ([\w-]+)/i, :delete)
-      route(/([\w-]+) inscribe ([\@\w-]+)( [0-9]*)?/, :inscribe)
-      route(/([\w-]+) add ([\@\w-]+)( [0-9-]*)?/, :add)
-      route(/([\w-]+) sum ([\@\w-]+)( [0-9-]*)?/, :add)
-      route(/([\w-]+) remove ([\@\w-]+)/, :delete_customer)
-      route(/([\w-]+) delete ([\@\w-]+)/, :delete_customer)
+      route(/ping/, :pong, command: true)
+      route(/create ([\w-]+)( [0-9]*)?/, :create, command: true)
+      route(/show ([\w-]+)/, :show, command: true)
+      route(/(?:(?=service)[\w-]+) (delete|remove) ([\w-]+)/, :delete, command: true)
+      route(/([\w-]+) inscribe ([\@\w-]+)( [0-9]*)?/, :inscribe, command: true)
+      route(/([\w-]+) (add|sum) ((?!(?:all))[\@\w-]+)( [0-9-]*)?/, :add, command: true)
+      route(/([\w-]+) (add|sum) all( [0-9-]*)?$/, :add_all, command: true)
+      route(/\b((?!(?:service))[\@\w-]+) (delete|remove) ([\@\w-]+)/,
+            :delete_customer, command: true)
 
       # Callbacks
       def pong(response)
@@ -63,6 +63,16 @@ module Lita
 
       def add(response)
         interactor = Interactors::AddQuantity
+                     .new(self, response.match_data)
+                     .perform
+
+        template = :message
+        message = { message: interactor.message }
+        reply(template, message, response, interactor)
+      end
+
+      def add_all(response)
+        interactor = Interactors::AddAll
                      .new(self, response.match_data)
                      .perform
 

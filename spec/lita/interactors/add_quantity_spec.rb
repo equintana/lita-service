@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe Lita::Interactors::AddQuantity do
-  let(:data) { ['the-service add @erlinis', name, '@erlinis', nil] }
+  let(:data) { ['the-service add @erlinis', name, 'add', '@erlinis', nil] }
   let(:interactor) { described_class.new(handler, data) }
   let(:handler) { double('handler') }
   let(:fake_repository) { double('redis-repository') }
@@ -32,7 +32,7 @@ describe Lita::Interactors::AddQuantity do
 
     describe 'when service exists' do
       describe 'when customer is not in the service' do
-        let(:data) { ['the-service add erlinis 1', name, 'erlinis', 1] }
+        let(:data) { ['the-service add erlinis 1', name, 'add', 'erlinis', 1] }
 
         let(:service) do
           { name: name,
@@ -89,7 +89,7 @@ describe Lita::Interactors::AddQuantity do
         end
 
         describe 'with a given quantity' do
-          let(:data) { ['the-service add @erlinis 3', name, '@erlinis', '3'] }
+          let(:data) { ['the-service add @erlinis 3', name, 'add', '@erlinis', '3'] }
           let(:customer_quantity) { 6 }
           let(:quantity) { 3 }
 
@@ -101,7 +101,7 @@ describe Lita::Interactors::AddQuantity do
         end
 
         describe 'with a negative quantity' do
-          let(:data) { ['the-service add @erlinis -1', name, '@erlinis', '-1'] }
+          let(:data) { ['the-service add @erlinis -1', name, 'add', '@erlinis', '-1'] }
           let(:customer_quantity) { 2 }
           let(:quantity) { -1 }
 
@@ -113,7 +113,7 @@ describe Lita::Interactors::AddQuantity do
         end
 
         describe 'without a quantity' do
-          let(:data) { ['the-service add @erlinis', name, '@erlinis', nil] }
+          let(:data) { ['the-service add @erlinis', name, 'add', '@erlinis', nil] }
           let(:customer_quantity) { 4 }
           let(:quantity) { 1 }
 

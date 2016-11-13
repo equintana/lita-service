@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe Lita::Interactors::DeleteCustomer do
-  let(:data) { ['the-service inscribe @erlinis', name, '@erlinis', nil] }
+  let(:data) { ['the-service delete @erlinis', name, 'delete', '@erlinis', nil] }
   let(:interactor) { described_class.new(handler, data) }
   let(:handler) { double('handler') }
   let(:fake_repository) { double('redis-repository') }
