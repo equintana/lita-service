@@ -2,9 +2,12 @@ en:
   lita:
     handlers:
       service:
-        empty: "No customers yet :("
+        list:
+          empty: "Nothing to see here."
         create:
           success: "Yay! %{service_name} service was created."  
+        show:
+          empty: "No customers yet :("
         delete: 
           success: "Service %{service_name} was deleted."
         inscribe:

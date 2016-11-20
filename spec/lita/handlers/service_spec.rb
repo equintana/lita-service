@@ -4,6 +4,7 @@ require 'spec_helper'
 describe Lita::Handlers::Service, lita_handler: true do
   describe 'routes' do
     it { is_expected.to route_command('ping').to(:pong) }
+    it { is_expected.to route_command('list').to(:list) }
     it { is_expected.to route_command('create TheService').to(:create) }
     it { is_expected.to route_command('create TheService 2000').to(:create) }
     it { is_expected.to route_command('show TheService').to(:show) }
@@ -28,6 +29,34 @@ describe Lita::Handlers::Service, lita_handler: true do
       it 'replies pong' do
         send_command('ping')
         expect(replies.last).to eq 'pong!'
+      end
+    end
+
+    describe '#list' do
+      describe 'with services' do
+        let(:list_of_services) do
+          "1. ServiceOne\n"\
+          "2. ServiceTwo\n"
+        end
+
+        before do
+          send_command('create ServiceOne')
+          send_command('create ServiceTwo')
+        end
+
+        it 'list all services' do
+          send_command('service list')
+          expect(replies.last).to eq(list_of_services)
+        end
+      end
+
+      describe 'without services' do
+        let(:empty_message) { 'Nothing to see here.' }
+
+        it 'show an empty state message' do
+          send_command('service list')
+          expect(replies.last).to eq(empty_message)
+        end
       end
     end
 
@@ -123,6 +152,7 @@ describe Lita::Handlers::Service, lita_handler: true do
         end
       end
     end
+
     describe '#delete' do
       describe 'when the service exists' do
         let(:success_message) { 'Service TheService was deleted.' }

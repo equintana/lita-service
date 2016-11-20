@@ -13,6 +13,16 @@ describe Lita::Repositories::Redis do
       it { expect(repository.exists?('key')).to eq false }
     end
 
+    describe 'all' do
+      let(:resources) { %w(key1 key2) }
+
+      before do
+        allow(redis).to receive(:keys)
+          .and_return(resources)
+      end
+      it { expect(repository.all).to eq resources }
+    end
+
     describe 'add' do
       let(:resource) do
         { name: 'key', attr: '1' }
