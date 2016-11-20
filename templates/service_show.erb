@@ -2,7 +2,7 @@
 <%= @service[:name] %>
 <% if @service[:customers].empty? %>
 
-  <%= I18n.t("lita.handlers.service.empty") %>
+  <%= I18n.t("lita.handlers.service.show.empty") %>
 
   <%= I18n.t("lita.handlers.service.inscribe.tip", service_name: @service[:name]) %>
 <% else %>

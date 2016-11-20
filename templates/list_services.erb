@@ -1,0 +1,8 @@
+<% if @services.empty? %>
+<%= I18n.t("lita.handlers.service.list.empty") %>
+<% else %>
+<% @services.each_with_index do |name, i| %>
+<%= "#{i + 1}. #{name}" %>
+
+<% end %>
+<% end %>

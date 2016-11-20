@@ -18,6 +18,10 @@ module Lita
         MultiJson.load(resource, symbolize_keys: true)
       end
 
+      def all
+        redis.keys
+      end
+
       def add(resource)
         redis.set(resource[:name], MultiJson.dump(resource))
       end

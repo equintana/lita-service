@@ -16,6 +16,7 @@ gem "lita-service"
 ## Usage
 
 ``` sh
+ lita service list
  lita service create        <NAME> <*VALUE>                 # Value will be set to 0 if empty.
  lita service show          <NAME>
  lita service delete|remove <NAME>
@@ -29,6 +30,7 @@ gem "lita-service"
 ## Example
 
 ``` sh
+ lita service list
  lita service create awesome-service 200
  lita service show awesome-service
  lita service delete awesome-service

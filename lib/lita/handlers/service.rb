@@ -7,6 +7,7 @@ module Lita
 
       # Routes
       route(/ping/, :pong, command: true)
+      route(/list/, :list, command: true)
       route(/create ([\w-]+)( [0-9]*)?/, :create, command: true)
       route(/show ([\w-]+)/, :show, command: true)
       route(/(?:(?=service)[\w-]+) (delete|remove) ([\w-]+)/, :delete, command: true)
@@ -19,6 +20,16 @@ module Lita
       # Callbacks
       def pong(response)
         response.reply 'pong!'
+      end
+
+      def list(response)
+        interactor = Interactors::ListServices
+                     .new(self, response.match_data)
+                     .perform
+
+        template = :list_services
+        message = { services: interactor.message }
+        reply(template, message, response, interactor)
       end
 
       def create(response)

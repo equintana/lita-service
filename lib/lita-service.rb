@@ -7,6 +7,7 @@ Lita.load_locales Dir[File.expand_path(
 
 require 'lita/handlers/service'
 require 'lita/interactors/base_interactor'
+require 'lita/interactors/list_services'
 require 'lita/interactors/create_service'
 require 'lita/interactors/add_quantity'
 require 'lita/interactors/add_all'
