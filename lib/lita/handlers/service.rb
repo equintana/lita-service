@@ -6,16 +6,18 @@ module Lita
       namespace :service
 
       # Routes
-      route(/ping/, :pong, command: true)
-      route(/list/, :list, command: true)
-      route(/create ([\w-]+)( [0-9]*)?/, :create, command: true)
-      route(/show ([\w-]+)/, :show, command: true)
-      route(/(?:(?=service)[\w-]+) (delete|remove) ([\w-]+)/, :delete, command: true)
-      route(/([\w-]+) inscribe ([\@\w-]+)( [0-9]*)?/, :inscribe, command: true)
-      route(/([\w-]+) (add|sum) ((?!(?:all))[\@\w-]+)( [0-9-]*)?/, :add, command: true)
-      route(/([\w-]+) (add|sum) all( [0-9-]*)?$/, :add_all, command: true)
-      route(/\b((?!(?:service))[\@\w-]+) (delete|remove) ([\@\w-]+)/,
-            :delete_customer, command: true)
+      route(/service ping/, :pong, command: true)
+      route(/service list/, :list, command: true)
+      route(/service create ([\w-]+)( [0-9]*)?/, :create, command: true)
+      route(/service show ([\w-]+)/, :show, command: true)
+      route(/service (delete|remove) ([\w-]+)/, :delete, command: true)
+      route(/service ([\w-]+) inscribe ([\@\w-]+)( [0-9]*)?/, :inscribe, command: true)
+      route(/service ([\w-]+) (add|sum) ((?!(?:all))[\@\w-]+)( [0-9-]*)?/, :add,
+            command: true)
+      route(/service ([\w-]+) (add|sum) all( [0-9-]*)?$/, :add_all,
+            command: true)
+      route(/service ([\w-]+) (delete|remove) ([\@\w-]+)/, :delete_customer,
+            command: true)
 
       # Callbacks
       def pong(response)
