@@ -118,6 +118,7 @@ describe Lita::Handlers::Service, lita_handler: true do
 
           it 'shows the service' do
             service_data = "\nTheService\n" \
+              "```\n" \
               "-------------------------------------------------------------\n" \
               "  #  | Name                 | Quantity | Value    | Total    \n" \
               "-----+----------------------+----------+----------+----------\n" \
@@ -125,7 +126,8 @@ describe Lita::Handlers::Service, lita_handler: true do
               "   2 | khal                 | 2        | 2000     | 4000     \n" \
               "-----+----------------------+----------+----------+----------\n" \
               "     | Total                | 3        | ***      | 6000     \n" \
-              "-------------------------------------------------------------\n"
+              "-------------------------------------------------------------\n" \
+              '```'
 
             send_command('service show TheService')
             expect(replies.last).to eq(service_data)
