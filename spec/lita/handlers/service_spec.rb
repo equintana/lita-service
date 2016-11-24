@@ -44,10 +44,8 @@ describe Lita::Handlers::Service, lita_handler: true do
         end
 
         it 'list all services' do
-          services = "1. XYZ\n"\
-                     "2. ABC\n"
           send_command('service list')
-          expect(replies.last).to eq(services)
+          expect(replies.last).to include('XYZ', 'ABC')
         end
       end
 
