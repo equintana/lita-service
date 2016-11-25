@@ -27,6 +27,11 @@ gem "lita-service"
  lita service <NAME> add|sum all   <*QUANTITY>              # Quantity will be set to 1 if empty.
 ```
 
+To show the available commands
+```
+ lito help service
+```
+
 ## Example
 
 ``` sh

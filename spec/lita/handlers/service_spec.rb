@@ -26,7 +26,7 @@ describe Lita::Handlers::Service, lita_handler: true do
 
   describe 'callbacks' do
     let(:service_not_found_error) do
-      "ERROR: There isn't a service called TheService or it was deleted."
+      "_ERROR: There isn't a service called *TheService* or it was deleted._"
     end
 
     describe '#ping' do
@@ -51,7 +51,7 @@ describe Lita::Handlers::Service, lita_handler: true do
 
       describe 'without services' do
         it 'show an empty state message' do
-          empty_message = 'Nothing to see here.'
+          empty_message = "Services List\n_Nothing to see here._\n"
           send_command('service list')
           expect(replies.last).to eq(empty_message)
         end
@@ -61,9 +61,7 @@ describe Lita::Handlers::Service, lita_handler: true do
     describe '#create' do
       describe 'name not taken' do
         let(:success_message) do
-          "Yay! TheService service was created.\n"\
-          "Add customers with:\n"\
-          'lita service TheService inscribe < CUSTOMER > < *VALUE >'
+          '_Yay! *TheService* service was created._'
         end
 
         it 'creates a service with name' do
@@ -79,7 +77,7 @@ describe Lita::Handlers::Service, lita_handler: true do
 
       describe 'name taken' do
         it 'replys with an error' do
-          error_message = 'ERROR: A service called TheService exist already.'
+          error_message = '_ERROR: A service called *TheService* exist already._'
           send_command('service create TheService')
           send_command('service create TheService')
           expect(replies.last).to eq(error_message)
@@ -95,10 +93,7 @@ describe Lita::Handlers::Service, lita_handler: true do
 
         describe 'without customers' do
           it 'shows an empty state message' do
-            empty_message = "\nTheService\n" \
-              "  No customers yet :(\n\n" \
-              "  Add customers with:\n" \
-              "lita service TheService inscribe < CUSTOMER > < *VALUE >\n"
+            empty_message = "\n*TheService*\n\n_No customers yet :(_\n"
 
             send_command('service show TheService')
             expect(replies.last).to eq(empty_message)
@@ -115,7 +110,7 @@ describe Lita::Handlers::Service, lita_handler: true do
           end
 
           it 'shows the service' do
-            service_data = "\nTheService\n" \
+            service_data = "\n*TheService*\n\n" \
               "```\n" \
               "-------------------------------------------------------------\n" \
               "  #  | Name                 | Quantity | Value    | Total    \n" \
@@ -148,7 +143,7 @@ describe Lita::Handlers::Service, lita_handler: true do
         end
 
         it 'deletes the service' do
-          success_message = 'Service TheService was deleted.'
+          success_message = '_Service *TheService* was deleted._'
           send_command('service delete TheService')
           expect(replies.last).to eq(success_message)
         end
@@ -170,12 +165,12 @@ describe Lita::Handlers::Service, lita_handler: true do
         end
 
         it 'inscribes the customer if not in service' do
-          success_message = 'erlinis was inscribed to TheService.'
+          success_message = '_*erlinis* was inscribed to *TheService*._'
           expect(replies.last).to eq(success_message)
         end
 
         it 'returns an error is customer inscribed already' do
-          error = 'ERROR: erlinis is already in TheService.'
+          error = '_ERROR: *erlinis* is already in *TheService*._'
           send_command('service TheService inscribe @erlinis 2000')
           expect(replies.last).to eq(error)
         end
@@ -201,7 +196,7 @@ describe Lita::Handlers::Service, lita_handler: true do
           end
 
           it 'removes the customer' do
-            success_message = 'erlinis was deleted from TheService.'
+            success_message = '_*erlinis* was deleted from *TheService*._'
             send_command('service TheService delete @erlinis')
             expect(replies.last).to eq(success_message)
           end
@@ -209,7 +204,7 @@ describe Lita::Handlers::Service, lita_handler: true do
 
         describe 'customer not in service' do
           it 'returns an error' do
-            error = 'ERROR: There is no erlinis in TheService.'
+            error = '_ERROR: There is no *erlinis* in *TheService*._'
             send_command('service TheService delete @erlinis')
             expect(replies.last).to eq(error)
           end
@@ -233,7 +228,7 @@ describe Lita::Handlers::Service, lita_handler: true do
 
         describe 'with positive quantity' do
           it 'inscrease the customer quantity' do
-            success_message = '2 was added to erlinis, new quantity: 2'
+            success_message = '_*2* was added to *erlinis*, new quantity: *2*_'
             send_command('service TheService add @erlinis 2')
             expect(replies.last).to eq(success_message)
           end
@@ -241,7 +236,7 @@ describe Lita::Handlers::Service, lita_handler: true do
 
         describe 'with negative quantity' do
           it 'decrease the customer quantity' do
-            success_message = '-1 was added to erlinis, new quantity: 4'
+            success_message = '_*-1* was added to *erlinis*, new quantity: *4*_'
             send_command('service TheService add @erlinis 5')
             send_command('service TheService add @erlinis -1')
             expect(replies.last).to eq(success_message)
@@ -259,7 +254,7 @@ describe Lita::Handlers::Service, lita_handler: true do
 
     describe '#add_all' do
       describe 'when service exists' do
-        let(:success_message) { "#{quantity} was added to all." }
+        let(:success_message) { "_*#{quantity}* was added to all._" }
 
         before do
           send_command('service create TheService')
