@@ -14,6 +14,8 @@ en:
         inscribe:
           success: "*%{customer_name}* was inscribed to *%{service_name}*."
           tip: "Add customers with:\nlita service *%{service_name}* inscribe < CUSTOMER > < *VALUE >"
+        set_value:
+          success: "*%{customer_name}* value was changed from *%{old_value}* to *%{customer_value}*."
         add:
           success: "*%{quantity}* was added to *%{customer_name}*, new quantity: *%{customer_quantity}*"
         add_all:
