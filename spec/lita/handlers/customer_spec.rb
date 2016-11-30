@@ -6,8 +6,8 @@ describe Lita::Handlers::Customer, lita_handler: true,
                                    additional_lita_handlers: Lita::Handlers::Service do
   describe 'routes' do
     it { is_expected.to route_command('service XYZ inscribe @jhon').to(:inscribe) }
-    it { is_expected.to route_command('service XYZ inscribe @jhon 20').to(:inscribe) }
-    it { is_expected.to route_command('service XYZ value @jhon 2000').to(:change_value) }
+    it { is_expected.to route_command('service XYZ inscribe @jhon 200').to(:inscribe) }
+    it { is_expected.to route_command('service XYZ value @jhon 200').to(:change_value) }
     it { is_expected.to route_command('service XYZ add @jhon 2').to(:add) }
     it { is_expected.to route_command('service XYZ add @jhon -2').to(:add) }
     it { is_expected.to route_command('service XYZ add @jhon').to(:add) }
@@ -16,6 +16,7 @@ describe Lita::Handlers::Customer, lita_handler: true,
     it { is_expected.to route_command('service XYZ add all').to(:add_all) }
     it { is_expected.to route_command('service XYZ add all 2').to(:add_all) }
     it { is_expected.to route_command('service XYZ sum all 2').to(:add_all) }
+    it { is_expected.to route_command('service XYZ reset @jhon').to(:reset) }
     it { is_expected.to route_command('service XYZ delete jhon').to(:delete_customer) }
     it { is_expected.to route_command('service XYZ remove jhon').to(:delete_customer) }
   end
@@ -104,6 +105,28 @@ describe Lita::Handlers::Customer, lita_handler: true,
       describe 'when service does not exit' do
         it 'replys with an error' do
           send_command('service TheService delete @erlinis')
+          expect(replies.last).to eq(service_not_found_error)
+        end
+      end
+    end
+
+    describe '#reset' do
+      describe 'when service exists' do
+        before do
+          send_command('service create TheService')
+          send_command('service TheService inscribe @erlinis 2000')
+        end
+
+        it 'sets the customer quantity in zero' do
+          success_message = '_*2* was added to *erlinis*, new quantity: *2*_'
+          send_command('service TheService add @erlinis 2')
+          expect(replies.last).to eq(success_message)
+        end
+      end
+
+      describe ' when service does not exit' do
+        it 'replys with an error' do
+          send_command('service TheService reset @erlinis')
           expect(replies.last).to eq(service_not_found_error)
         end
       end
