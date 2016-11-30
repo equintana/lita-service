@@ -16,6 +16,8 @@ en:
           tip: "Add customers with:\nlita service *%{service_name}* inscribe < CUSTOMER > < *VALUE >"
         set_value:
           success: "*%{customer_name}* value was changed from *%{old_value}* to *%{customer_value}*."
+        reset:
+          success: "*%{customer_name}* quantity was changed to *0*."
         add:
           success: "*%{quantity}* was added to *%{customer_name}*, new quantity: *%{customer_quantity}*"
         add_all:
@@ -28,5 +30,3 @@ en:
         customer:
           duplicated: "*%{customer_name}* is already in *%{service_name}*."
           not_found: "There is no *%{customer_name}* in *%{service_name}*."
-
-

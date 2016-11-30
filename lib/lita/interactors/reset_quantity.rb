@@ -3,12 +3,11 @@ require 'lita/helpers/messages_helper'
 
 module Lita
   module Interactors
-    # Adds the given quantity to the customer's balance
-    class AddQuantity < BaseInteractor
+    # Set the customer quantity to zero
+    class ResetQuantity < BaseInteractor
       include Lita::Helpers::MessagesHelper
 
       attr_reader :data
-      DEFAULT_QUANTITY = 1
 
       def initialize(handler, data)
         @handler = handler
@@ -31,15 +30,15 @@ module Lita
       end
 
       def customer_name
-        @customer_name ||= data[3].delete('@')
-      end
-
-      def customer_quantity
-        @customer_quantity ||= data[4].to_s
+        @customer_name ||= data[2].delete('@')
       end
 
       def service
         @service ||= repository.find(name)
+      end
+
+      def customer
+        service[:customers][customer_name.to_sym]
       end
 
       def service_exists?
@@ -60,21 +59,15 @@ module Lita
       end
 
       def update_customer_quantity
-        new_quantity = increment_quantity
+        reset_quantity
         repository.update(service)
-        @message = I18n.t('lita.handlers.service.add.success',
-                          quantity: quantity_calculated,
-                          customer_name: customer_name,
-                          customer_quantity: new_quantity)
       end
 
-      def increment_quantity
-        service[:customers][customer_name.to_sym][:quantity] += quantity_calculated
-      end
+      def reset_quantity
+        customer[:quantity] = 0
 
-      def quantity_calculated
-        return customer_quantity.to_i unless customer_quantity.empty?
-        DEFAULT_QUANTITY
+        @message = I18n.t('lita.handlers.service.reset.success',
+                          customer_name: customer_name)
       end
     end
   end

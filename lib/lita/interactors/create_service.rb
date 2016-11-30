@@ -31,7 +31,7 @@ module Lita
       end
 
       def value
-        @value ||= data[2].to_f
+        @value ||= data[2].to_i
       end
 
       def service_exists?

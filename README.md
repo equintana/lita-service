@@ -26,6 +26,7 @@ gem "lita-service"
  lita service <NAME> add|sum       <CUSTOMER> <*QUANTITY>   # Quantity will be set to 1 if empty.
  lita service <NAME> add|sum all   <*QUANTITY>              # Quantity will be set to 1 if empty.
  lita service <NAME> value         <CUSTOMER> <VALUE>
+ lita service <NAME> reset         <CUSTOMER>
 ```
 
 To show the available commands
@@ -50,4 +51,5 @@ To show the available commands
  lita service awesome-service delete erlinis
  lita service awesome-service remove erlinis
  lita service awesome-service value erlinis 300
+ lita service awesome-service reset erlinis
 ```

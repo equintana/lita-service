@@ -25,6 +25,11 @@ module Lita
             help: { 'service _<name>_ add|sum all _<*quantity>_' =>
                     'Adds _<*quantity>_ or 1 to all users on service' })
 
+      route(/service ([\w-]+) reset ([\@\w-]+)/, :reset,
+            command: true,
+            help: { 'service _<name>_ reset _<user>_' =>
+                    'Sets the quantity of the _<user>_ to zero' })
+
       route(/service ([\w-]+) value ([\@\w-]+) ([0-9-]*)$/, :change_value,
             command: true,
             help: { 'service _<name>_ value _<user> <value>_' =>
@@ -59,6 +64,13 @@ module Lita
 
       def add_all(response)
         interactor = Interactors::AddAll.new(self, response.match_data).perform
+        template = :message
+        message = { message: interactor.message }
+        reply(template, message, response, interactor)
+      end
+
+      def reset(response)
+        interactor = Interactors::ResetQuantity.new(self, response.match_data).perform
         template = :message
         message = { message: interactor.message }
         reply(template, message, response, interactor)
