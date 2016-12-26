@@ -5,6 +5,7 @@ Lita.load_locales Dir[File.expand_path(
   File.join('..', '..', 'locales', '*.yml'), __FILE__
 )]
 
+require 'terminal-table'
 require 'lita/handlers/service'
 require 'lita/handlers/customer'
 require 'lita/interactors/base_interactor'
