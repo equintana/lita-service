@@ -33,10 +33,19 @@ describe Lita::Interactors::InscribeCustomer do
     describe 'when service exists' do
       describe 'when customer already in service' do
         let(:service) do
-          { name: name,
+          {
+            name: name,
             value: 2000,
             state: 'active',
-            customers: { erlinis: { quantity: 1, value: 2000 } } }
+            customers: {
+              erlinis: {
+                quantity: 1,
+                value: 2000,
+                updated_at: '',
+                updated_by: ''
+              }
+            }
+          }
         end
 
         let(:error_message) do
@@ -84,7 +93,7 @@ describe Lita::Interactors::InscribeCustomer do
               value: 2000,
               state: 'active',
               customers: {
-                erlinis: { quantity: 0, value: 3000 }
+                erlinis: { quantity: 0, value: 3000, updated_at: '', updated_by: '' }
               } }
           end
 
@@ -98,12 +107,19 @@ describe Lita::Interactors::InscribeCustomer do
 
         describe 'without custom service value' do
           let(:service_with_customer) do
-            { name: name,
+            {
+              name: name,
               value: 2000,
               state: 'active',
               customers: {
-                erlinis: { quantity: 0, value: 2000 }
-              } }
+                erlinis: {
+                  quantity: 0,
+                  value: 2000,
+                  updated_at: '',
+                  updated_by: ''
+                }
+              }
+            }
           end
 
           it 'adds the customer setting the custom value' do

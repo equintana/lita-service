@@ -6,7 +6,7 @@ _<%= I18n.t("lita.handlers.service.show.empty") %>_
 <% else %>
 <%  total = 0
     total_quantity = 0
-    headings = [ '#', 'Name', 'Quantity', 'Value', 'Total' ]
+    headings = [ '#', 'Name', 'Quantity', 'Value', 'Total', 'Updated At', 'Updated By']
 
 table = Terminal::Table.new :headings => headings do |t|
   @service[:customers].each_with_index do |(name, customer), i|
@@ -16,10 +16,11 @@ table = Terminal::Table.new :headings => headings do |t|
     subtotal       = quantity * value
     total          = total + subtotal
     total_quantity = total_quantity + quantity
-    t.add_row [ number, name.to_s, quantity, value, subtotal ]
+    updated_at     = Time.parse(customer[:updated_at]).strftime "%d/%h/%Y %H:%M" if customer[:updated_at]
+    t.add_row [ number, name.to_s, quantity, value, subtotal, updated_at, customer[:updated_by] ]
   end
   t << :separator
-  t.add_row [ '', 'Total', total_quantity, '***', total ]
+  t.add_row [ '', 'Total', total_quantity, '***', total, '', '' ]
 end
 %>
 <%= '```' %>

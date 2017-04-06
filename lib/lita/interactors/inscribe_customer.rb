@@ -68,7 +68,9 @@ module Lita
       def customer
         {
           quantity: 0,
-          value: calculate_value
+          value: calculate_value,
+          updated_at: '',
+          updated_by: ''
         }
       end
 

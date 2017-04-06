@@ -20,6 +20,7 @@ require 'lita/interactors/reset_quantity'
 require 'lita/interactors/add_all'
 require 'lita/interactors/delete_customer'
 require 'lita/helpers/messages_helper'
+require 'lita/helpers/last_update_helper'
 
 Lita::Handlers::Service.template_root File.expand_path(
   File.join('..', '..', 'templates'),

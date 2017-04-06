@@ -7,40 +7,35 @@ module Lita
     # or with 1 if nothing is specified.
     class AddAll < BaseInteractor
       include Lita::Helpers::MessagesHelper
+      include Lita::Helpers::LastUpdateHelper
 
-      attr_reader :data
+      attr_reader :service_name, :given_quantity, :user
       DEFAULT_QUANTITY = 1
 
-      def initialize(handler, data)
-        @handler = handler
-        @data = data
+      def initialize(handler, data, user)
+        @handler        = handler
+        @service_name   = data[1]
+        @given_quantity = data[3].to_s
+        @user = user
       end
 
       def perform
         if service_exists?
           update_all_quantities
         else
-          @error = msg_not_found(service_name: name)
+          @error = msg_not_found(service_name: service_name)
         end
         self
       end
 
       private
 
-      def name
-        @name ||= data[1]
-      end
-
-      def given_quantity
-        @customer_quantity ||= data[3].to_s
-      end
-
       def service
-        @service ||= repository.find(name)
+        @service ||= repository.find(service_name)
       end
 
       def service_exists?
-        repository.exists?(name)
+        repository.exists?(service_name)
       end
 
       def update_all_quantities
@@ -52,9 +47,14 @@ module Lita
 
       def increment_quantities
         quantity = quantity_calculated
-        service[:customers].map do |_key, customer_data|
-          customer_data[:quantity] += quantity
+        service[:customers].map do |customer_name, customer|
+          increment_customer_quantity(customer, quantity)
+          update_last_changed_data(service, customer_name, user)
         end
+      end
+
+      def increment_customer_quantity(customer, quantity)
+        customer[:quantity] += quantity
       end
 
       def quantity_calculated

@@ -3,9 +3,11 @@ require 'spec_helper'
 
 describe Lita::Interactors::ChangeValue do
   let(:data) { ['the-service value @erlinis 2000', name, '@erlinis', '2000'] }
-  let(:interactor) { described_class.new(handler, data) }
+  let(:lita_user) { OpenStruct.new(id: '123', name: 'the-user') }
+  let(:interactor) { described_class.new(handler, data, lita_user) }
   let(:handler) { double('handler') }
   let(:fake_repository) { double('redis-repository') }
+  let(:fake_time) { Time.parse('2016-12-23T19:51:57.918Z') }
 
   before do
     allow(interactor).to receive(:repository).and_return(fake_repository)
@@ -58,17 +60,33 @@ describe Lita::Interactors::ChangeValue do
 
       describe 'when customer is in service' do
         let(:service) do
-          { name: name,
+          {
+            name: name,
             value: 2000,
             state: 'active',
-            customers: { erlinis: { quantity: 1, value: 1000 } } }
+            customers: {
+              erlinis: {
+                quantity: 1,
+                value: 1000
+              }
+            }
+          }
         end
 
         let(:service_customer_updated) do
-          { name: name,
+          {
+            name: name,
             value: 2000,
             state: 'active',
-            customers: { erlinis: { quantity: 1, value: 2000 } } }
+            customers: {
+              erlinis: {
+                quantity: 1,
+                value: 2000,
+                updated_at: fake_time,
+                updated_by: 'the-user'
+              }
+            }
+          }
         end
 
         let(:success_message) do
@@ -82,6 +100,7 @@ describe Lita::Interactors::ChangeValue do
           allow(fake_repository).to receive(:exists?).with(name).and_return(true)
           allow(fake_repository).to receive(:find).with(name).and_return(service)
           allow(fake_repository).to receive(:update).with(service_customer_updated)
+          allow(Time).to receive(:now).and_return(fake_time)
         end
 
         describe 'updates customer value' do

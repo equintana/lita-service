@@ -3,3 +3,5 @@ Style/FileName:
    
 Metrics/LineLength:
    Max: 90
+   Exclude:
+    - 'spec/lita/handlers/service_spec.rb'
