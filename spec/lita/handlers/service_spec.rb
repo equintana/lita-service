@@ -101,6 +101,7 @@ describe Lita::Handlers::Service, lita_handler: true,
             send_command('service TheService add khal 2')
           end
 
+          # rubocop:disable LineLength
           it 'shows the service' do
             service_data = "\n*TheService*\n\n" \
               "```\n" \
