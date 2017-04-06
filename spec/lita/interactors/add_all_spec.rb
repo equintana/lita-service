@@ -3,9 +3,11 @@ require 'spec_helper'
 
 describe Lita::Interactors::AddAll do
   let(:data) { ['the-service add all', name, 'add', nil] }
-  let(:interactor) { described_class.new(handler, data) }
+  let(:lita_user) { OpenStruct.new(id: '123', name: 'the-user') }
+  let(:interactor) { described_class.new(handler, data, lita_user) }
   let(:handler) { double('handler') }
   let(:fake_repository) { double('redis-repository') }
+  let(:fake_time) { Time.parse('2016-12-23T19:51:57.918Z') }
 
   before do
     allow(interactor).to receive(:repository).and_return(fake_repository)
@@ -46,8 +48,18 @@ describe Lita::Interactors::AddAll do
           value: 2000,
           state: 'active',
           customers: {
-            erlinis: { quantity: (3 + quantity), value: 2000 },
-            khal: { quantity: (2 + quantity), value: 2000 }
+            erlinis: {
+              quantity: (3 + quantity),
+              value: 2000,
+              updated_at: fake_time,
+              updated_by: 'the-user'
+            },
+            khal: {
+              quantity: (2 + quantity),
+              value: 2000,
+              updated_at: fake_time,
+              updated_by: 'the-user'
+            }
           } }
       end
 
@@ -59,6 +71,7 @@ describe Lita::Interactors::AddAll do
       before do
         allow(fake_repository).to receive(:exists?).with(name).and_return(true)
         allow(fake_repository).to receive(:find).with(name).and_return(service)
+        allow(Time).to receive(:now).and_return(fake_time)
       end
 
       describe 'with a given quantity' do

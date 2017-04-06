@@ -53,3 +53,13 @@ To show the available commands
  lita service awesome-service value erlinis 300
  lita service awesome-service reset erlinis
 ```
+
+
+## Test
+
+To run the tests use
+
+```
+ rake spec
+```
+

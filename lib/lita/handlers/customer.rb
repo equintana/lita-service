@@ -42,48 +42,50 @@ module Lita
 
       # Callbacks
       def inscribe(response)
-        interactor = Interactors::InscribeCustomer.new(self, response.match_data).perform
-        template = :message
-        message = { message: interactor.message }
-        reply(template, message, response, interactor)
+        interactor = Interactors::InscribeCustomer
+                     .new(self, response.match_data)
+                     .perform
+        reply(response, interactor)
       end
 
       def change_value(response)
-        interactor = Interactors::ChangeValue.new(self, response.match_data).perform
-        template = :message
-        message = { message: interactor.message }
-        reply(template, message, response, interactor)
+        interactor = Interactors::ChangeValue
+                     .new(self, response.match_data, response.user)
+                     .perform
+        reply(response, interactor)
       end
 
       def add(response)
-        interactor = Interactors::AddQuantity.new(self, response.match_data).perform
-        template = :message
-        message = { message: interactor.message }
-        reply(template, message, response, interactor)
+        interactor = Interactors::AddQuantity
+                     .new(self, response.match_data, response.user)
+                     .perform
+        reply(response, interactor)
       end
 
       def add_all(response)
-        interactor = Interactors::AddAll.new(self, response.match_data).perform
-        template = :message
-        message = { message: interactor.message }
-        reply(template, message, response, interactor)
+        interactor = Interactors::AddAll
+                     .new(self, response.match_data, response.user)
+                     .perform
+        reply(response, interactor)
       end
 
       def reset(response)
-        interactor = Interactors::ResetQuantity.new(self, response.match_data).perform
-        template = :message
-        message = { message: interactor.message }
-        reply(template, message, response, interactor)
+        interactor = Interactors::ResetQuantity
+                     .new(self, response.match_data, response.user)
+                     .perform
+        reply(response, interactor)
       end
 
       def delete_customer(response)
-        interactor = Interactors::DeleteCustomer.new(self, response.match_data).perform
-        template = :message
-        message = { message: interactor.message }
-        reply(template, message, response, interactor)
+        interactor = Interactors::DeleteCustomer
+                     .new(self, response.match_data)
+                     .perform
+        reply(response, interactor)
       end
 
-      def reply(template, message, response, interactor)
+      def reply(response, interactor)
+        template = :message
+        message = { message: interactor.message }
         unless interactor.success?
           template = :error
           message = { error: interactor.error }

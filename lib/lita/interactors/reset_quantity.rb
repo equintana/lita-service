@@ -1,40 +1,36 @@
 # frozen_string_literal: true
 require 'lita/helpers/messages_helper'
+require 'lita/helpers/last_update_helper'
 
 module Lita
   module Interactors
     # Set the customer quantity to zero
     class ResetQuantity < BaseInteractor
       include Lita::Helpers::MessagesHelper
+      include Lita::Helpers::LastUpdateHelper
 
-      attr_reader :data
+      attr_reader :service_name, :customer_name, :user
 
-      def initialize(handler, data)
-        @handler = handler
-        @data = data
+      def initialize(handler, data, user)
+        @handler           = handler
+        @service_name      = data[1]
+        @customer_name     = data[2].delete('@')
+        @user              = user
       end
 
       def perform
         if service_exists?
           update_costumer_if_exist
         else
-          @error = msg_not_found(service_name: name)
+          @error = msg_not_found(service_name: service_name)
         end
         self
       end
 
       private
 
-      def name
-        @name ||= data[1]
-      end
-
-      def customer_name
-        @customer_name ||= data[2].delete('@')
-      end
-
       def service
-        @service ||= repository.find(name)
+        @service ||= repository.find(service_name)
       end
 
       def customer
@@ -42,7 +38,7 @@ module Lita
       end
 
       def service_exists?
-        repository.exists?(name)
+        repository.exists?(service_name)
       end
 
       def customer_exists?
@@ -51,16 +47,13 @@ module Lita
 
       def update_costumer_if_exist
         if customer_exists?
-          update_customer_quantity
+          reset_quantity
+          update_last_changed_data(service, customer_name, user)
+          repository.update(service)
         else
-          @error = msg_customer_not_found(service_name: name,
+          @error = msg_customer_not_found(service_name: service_name,
                                           customer_name: customer_name)
         end
-      end
-
-      def update_customer_quantity
-        reset_quantity
-        repository.update(service)
       end
 
       def reset_quantity

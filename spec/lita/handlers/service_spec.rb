@@ -91,7 +91,9 @@ describe Lita::Handlers::Service, lita_handler: true,
         end
 
         describe 'with customers' do
+          let(:fake_time) { Time.parse('2017-04-05T17:57:57.918Z') }
           before do
+            allow(Time).to receive(:now).and_return(fake_time)
             send_command('service create TheService 2000')
             send_command('service TheService inscribe erlinis 2000')
             send_command('service TheService inscribe khal 2000')
@@ -102,14 +104,14 @@ describe Lita::Handlers::Service, lita_handler: true,
           it 'shows the service' do
             service_data = "\n*TheService*\n\n" \
               "```\n" \
-              "+---+---------+----------+-------+-------+\n" \
-              "| # | Name    | Quantity | Value | Total |\n" \
-              "+---+---------+----------+-------+-------+\n" \
-              "| 1 | erlinis | 1        | 2000  | 2000  |\n" \
-              "| 2 | khal    | 2        | 2000  | 4000  |\n" \
-              "+---+---------+----------+-------+-------+\n" \
-              "|   | Total   | 3        | ***   | 6000  |\n" \
-              "+---+---------+----------+-------+-------+\n" \
+              "+---+---------+----------+-------+-------+-------------------+------------+\n" \
+              "| # | Name    | Quantity | Value | Total | Updated At        | Updated By |\n" \
+              "+---+---------+----------+-------+-------+-------------------+------------+\n" \
+              "| 1 | erlinis | 1        | 2000  | 2000  | 05/Apr/2017 17:57 | Test User  |\n" \
+              "| 2 | khal    | 2        | 2000  | 4000  | 05/Apr/2017 17:57 | Test User  |\n" \
+              "+---+---------+----------+-------+-------+-------------------+------------+\n" \
+              "|   | Total   | 3        | ***   | 6000  |                   |            |\n" \
+              "+---+---------+----------+-------+-------+-------------------+------------+\n" \
               '```'
 
             send_command('service show TheService')
